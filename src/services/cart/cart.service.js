@@ -2,12 +2,11 @@
 const createService = require('./cart.class.js');
 const hooks = require('./cart.hooks');
 
-module.exports = function (app) {
-  
+module.exports = function(app) {
   const paginate = app.get('paginate');
 
   const options = {
-    paginate
+    paginate,
   };
 
   // Initialize our service with any options it requires
