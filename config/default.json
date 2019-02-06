@@ -6,5 +6,7 @@
     "default": 10,
     "max": 50
   },
-  "mongodb": "mongodb://localhost:27017/feathers_cart"
+  "mongodb": "mongodb://localhost:27017/feathers_cart",
+  "secret": "This is a very big secret",
+  "sessions": "sessions"
 }

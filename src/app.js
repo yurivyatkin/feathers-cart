@@ -14,6 +14,9 @@ const channels = require('./channels');
 
 const mongodb = require('./mongodb');
 
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
 const app = express(feathers());
 
 // Load app configuration
@@ -24,6 +27,23 @@ app.use(cors());
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const sessionStore = new MongoDBStore({
+  uri: app.get('mongodb'),
+  collection: app.get('sessions'),
+});
+app.use(
+  session({
+    secret: app.get('secret'),
+    resave: false,
+    saveUninitialized: true,
+    unset: 'destroy',
+    store: sessionStore,
+    cookie: {
+      maxAge: 31 * 24 * 60 * 60 * 1000, // 31 days, in milliseconds
+    },
+  })
+);
 
 // Set up Plugins and providers
 app.configure(express.rest());
