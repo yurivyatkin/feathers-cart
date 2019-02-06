@@ -3,12 +3,13 @@ const url = require('url');
 const app = require('../src/app');
 
 const port = app.get('port') || 3030;
-const getUrl = pathname => url.format({
-  hostname: app.get('host') || 'localhost',
-  protocol: 'http',
-  port,
-  pathname
-});
+const getUrl = pathname =>
+  url.format({
+    hostname: app.get('host') || 'localhost',
+    protocol: 'http',
+    port,
+    pathname,
+  });
 
 describe('Feathers application tests (with jest)', () => {
   beforeAll(done => {
@@ -20,37 +21,37 @@ describe('Feathers application tests (with jest)', () => {
     this.server.close(done);
   });
 
-  it('starts and shows the index page', () => {
+  it('informs that it is headless', () => {
     expect.assertions(1);
-    return rp(getUrl()).then(
-      body => expect(body.indexOf('<html>')).not.toBe(-1)
+    return rp(getUrl()).then(body =>
+      expect(JSON.parse(body)).toEqual({
+        message: 'This is the root of a headless API',
+      })
     );
   });
 
   describe('404', () => {
-    it('shows a 404 HTML page', () => {
-      expect.assertions(2);
+    it('generates a 404 error for non-existent paths', () => {
+      expect.assertions(1);
       return rp({
         url: getUrl('path/to/nowhere'),
         headers: {
-          'Accept': 'text/html'
-        }
+          Accept: 'application/json',
+        },
       }).catch(res => {
         expect(res.statusCode).toBe(404);
-        expect(res.error.indexOf('<html>')).not.toBe(-1);
       });
     });
 
     it('shows a 404 JSON error without stack trace', () => {
-      expect.assertions(4);
+      expect.assertions(3);
       return rp({
         url: getUrl('path/to/nowhere'),
-        json: true
+        json: true,
       }).catch(res => {
         expect(res.statusCode).toBe(404);
         expect(res.error.code).toBe(404);
         expect(res.error.message).toBe('Page not found');
-        expect(res.error.name).toBe('NotFound');
       });
     });
   });
