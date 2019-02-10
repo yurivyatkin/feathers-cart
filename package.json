@@ -2,7 +2,7 @@
   "name": "feathers-cart",
   "description": "A headless shopping cart powered by FeathersJS",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://github.com/yurivyatkin/feathers-cart",
   "main": "src",
   "keywords": [
     "feathers"
